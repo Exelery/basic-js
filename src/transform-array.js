@@ -1,4 +1,3 @@
-const { computed } = require('vue');
 const { NotImplementedError } = require('../extensions/index.js');
 
 /**
