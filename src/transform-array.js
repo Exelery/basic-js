@@ -14,35 +14,44 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
-function transform( arr ) {
-  try{
-    if(arr.length == 0) return arr
-    let copy = arr.slice()
+function transform(arr) {
+    if(!Array.isArray(arr)) throw new Error("'arr' parameter must be an instance of the Array!")
+    if (arr.length == 0) return arr
+    // let arr = arr.slice()
     let answer = []
-    for(let i in copy){
-      switch(copy[i]){
+    for (let i = 0; i < arr.length; i++) {
+      switch (arr[i]) {
         case '--discard-next':
-          if(copy[i+1] &&  typeof copy[i+1] == 'number') {
-            copy.splice(i+1, 1)
-            console.log(copy)
+          if (arr[i + 1] && typeof arr[i + 1] == 'number') {
+            
+            i++
+            
           }
-        break
+          break
         case '--discard-prev':
-          if(copy[i-1] &&  typeof copy[i-1] == 'number') copy.splice(i-1, 1)
-        break
+          if (arr[i - 1] && typeof arr[i - 1] == 'number' && arr[i - 2] != '--discard-next') {
+            answer.pop()
+          }
+          break
         case '--double-next':
-          if(copy[i+1] &&  typeof copy[i+1] == 'number') copy.splice(i+1, 0, copy[i+1])
-        break
+          if (arr[i + 1] && typeof arr[i + 1] == 'number') {
+            i++
+            answer.push(arr[i])
+            answer.push(arr[i])
+          }
+          
+          break
         case '--double-prev':
-          if(copy[i-1] &&  typeof copy[i-1] == 'number') copy.splice(i-1, 0, copy[i-1])
-        break
+          if (arr[i - 1] && typeof arr[i - 1] == 'number' && arr[i - 2] != '--discard-next') {
+            answer.push(arr[i-1])
+          }
+          break
+        default:
+          answer.push(arr[i])
 
       }
-      return copy.filter(Number)
     }
-  }catch (e){
-    throw new Error("'arr' parameter must be an instance of the Array!")
-  }
+    return answer
   // throw new NotImplementedError('Not implemented');
   // remove line with error and write your code here
 }
@@ -51,5 +60,5 @@ module.exports = {
   transform
 };
 
-console.log(transform([1, 2, 3, '--discard-next', 1337, '--double-prev', 4, 5]))
-console.log((1337 &&  typeof 1337 == 'number'))
+// console.log(transform([1, 2, 3, '--discard-next', 1337, '--double-prev', 4, 5]))
+console.log(transform([1, 2, 3, '--double-next', 1337, '--double-prev', 4, 5]))
