@@ -17,23 +17,24 @@ function transform(arr) {
     if(!Array.isArray(arr)) throw new Error("'arr' parameter must be an instance of the Array!")
     if (arr.length == 0) return arr
     // let arr = arr.slice()
+    let allcomands = ['--discard-next', '--discard-prev','--double-next', '--double-prev']
     let answer = []
     for (let i = 0; i < arr.length; i++) {
       switch (arr[i]) {
         case '--discard-next':
-          if (arr[i + 1] && typeof arr[i + 1] == 'number') {
+          if (arr[i + 1] && !allcomands.includes(arr[i + 1])) {
             
             i++
             
           }
           break
         case '--discard-prev':
-          if (arr[i - 1] && typeof arr[i - 1] == 'number' && arr[i - 2] != '--discard-next') {
+          if (arr[i - 1] && !allcomands.includes(arr[i - 1]) && arr[i - 2] != '--discard-next') {
             answer.pop()
           }
           break
         case '--double-next':
-          if (arr[i + 1] && typeof arr[i + 1] == 'number') {
+          if (arr[i + 1] && !allcomands.includes(arr[i + 1])) {
             i++
             answer.push(arr[i])
             answer.push(arr[i])
@@ -41,7 +42,7 @@ function transform(arr) {
           
           break
         case '--double-prev':
-          if (arr[i - 1] && typeof arr[i - 1] == 'number' && arr[i - 2] != '--discard-next') {
+          if (arr[i - 1] && !allcomands.includes(arr[i - 1]) && arr[i - 2] != '--discard-next') {
             answer.push(arr[i-1])
           }
           break
@@ -59,5 +60,5 @@ module.exports = {
   transform
 };
 
-// console.log(transform([1, 2, 3, '--discard-next', 1337, '--double-prev', 4, 5]))
-console.log(transform([1, 2, 3, '--double-next', 1337, '--double-prev', 4, 5]))
+console.log(transform([1, 2, 3, '--discard-next', 1337, '--double-prev', 4, 5]))
+console.log(transform([ '1', '--discrard-next', 4 ]))
